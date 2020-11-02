@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "description": "Dynamic Web Server using Node JS",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Chase Rapp",
+        "email": "rapp5227@stthomas.edu"
     },
     "contributors": [
         {
@@ -19,7 +19,7 @@
     "main": "server.js",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/rapp5227/Project2-DynamicServer"
     },
     "dependencies": {
         "express": "^4.17.1",
