@@ -8,8 +8,8 @@
     },
     "contributors": [
         {
-            "name": "",
-            "email": ""
+            "name": "Blake Robinson",
+            "email": "robi1652@stthomas.edu"
         },
         {
             "name": "",
@@ -23,7 +23,6 @@
     },
     "dependencies": {
         "express": "^4.17.1",
-        "plotly": "^1.0.6",
         "sqlite3": "^5.0.0"
     }
 }
