@@ -5,14 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="application/javascript">
         // `energy_type` and object of consumption per year per state => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
         var energy_type;
         var energy_counts;  // e.g. {AK: [...], AL: [...], AR: [...], ...}
+
+        function graph() {
+            console.log('working')
+            var data = [{
+                values: [19, 26, 55],
+                labels: ['Residential', 'Non-Residential', 'Utility'],
+                type: 'pie'
+            }];
+
+            var layout = {
+                height: 400,
+                width: 500
+            };
+
+            Plotly.newPlot('myDiv', data, layout);
+        }
+
+        console.log(Plotly.BUILD)
     </script>
 </head>
-<body>
+<body onload = "graph()">
     <!-- create template here -->
+
+    <div id = "myDiv"></div>
 </body>
 </html>
