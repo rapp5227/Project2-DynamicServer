@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../public/css/style.css">
     <script type="application/javascript">
         // `state` and arrays of consumption per year => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
@@ -16,7 +16,39 @@
         var renewable_counts;
     </script>
 </head>
-<body >
-    <!-- create template here -->
+<body>
+<div id = 'navbar'>
+    <h2 class = 'navlink'><a href = ''>States</a></h2>
+    <h2 class = 'navlink'><a href = ''>Energy</a></h2>
+    <h2 class = 'navlink'><a href = ''>Year</a></h2>
+</div>
+
+<h1>{STATE}</h1>
+<div id = imageContainer>
+
+</div>
+<div id = graphContainer>
+    
+</div>
+
+<div id = 'tableContainer'>
+    <table>
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Coal</th>
+                <th>Natural Gas</th>
+                <th>Nuclear</th>
+                <th>Petroleum</th>
+                <th>Renewable</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- {TABLE_RESULTS} -->
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>

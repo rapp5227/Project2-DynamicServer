@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../public/css/style.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="application/javascript">
         // `energy_type` and object of consumption per year per state => set these variables equal to appropriate value
@@ -12,8 +12,7 @@
         var energy_type;
         var energy_counts;  // e.g. {AK: [...], AL: [...], AR: [...], ...}
 
-        function graph() {
-            console.log('working')
+        function graph() { //TODO currently graphs dummy values instead of real ones
             var data = [{
                 values: [19, 26, 55],
                 labels: ['Residential', 'Non-Residential', 'Utility'],
@@ -21,19 +20,94 @@
             }];
 
             var layout = {
-                height: 400,
-                width: 500
+                height: document.getElementById('graphContainer').style.height,
+                width: document.getElementById('graphContainer').style.width
             };
 
-            Plotly.newPlot('myDiv', data, layout);
+            Plotly.newPlot('graphContainer', data, layout);
         }
-
-        console.log(Plotly.BUILD)
     </script>
 </head>
 <body onload = "graph()">
     <!-- create template here -->
 
-    <div id = "myDiv"></div>
+    <div id = 'navbar'>
+        <h2 class = 'navlink'><a href = ''>States</a></h2>
+        <h2 class = 'navlink'><a href = ''>Energy</a></h2>
+        <h2 class = 'navlink'><a href = ''>Year</a></h2>
+    </div>
+
+    <h1>{ENERGY_TYPE}</h1>
+    <div id = imageContainer>
+
+    </div>
+    <div id = graphContainer>
+        
+    </div>
+    
+    <div id = 'tableContainer'>
+        <table>
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>AK</th>
+                    <th>AL</th>
+                    <th>AR</th>
+                    <th>AZ</th>
+                    <th>CA</th>
+                    <th>CO</th>
+                    <th>CT</th>
+                    <th>DC</th>
+                    <th>DE</th>
+                    <th>FL</th>
+                    <th>GA</th>
+                    <th>HI</th>
+                    <th>IA</th>
+                    <th>ID</th>
+                    <th>IL</th>
+                    <th>IN</th>
+                    <th>KS</th>
+                    <th>KY</th>
+                    <th>LA</th>
+                    <th>MA</th>
+                    <th>MD</th>
+                    <th>ME</th>
+                    <th>MI</th>
+                    <th>MN</th>
+                    <th>MO</th>
+                    <th>MS</th>
+                    <th>MT</th>
+                    <th>NC</th>
+                    <th>ND</th>
+                    <th>NE</th>
+                    <th>NH</th>
+                    <th>NJ</th>
+                    <th>NM</th>
+                    <th>NV</th>
+                    <th>NY</th>
+                    <th>OH</th>
+                    <th>OK</th>
+                    <th>OR</th>
+                    <th>PA</th>
+                    <th>RI</th>
+                    <th>SC</th>
+                    <th>SD</th>
+                    <th>TN</th>
+                    <th>TX</th>
+                    <th>UT</th>
+                    <th>VA</th>
+                    <th>VT</th>
+                    <th>WA</th>
+                    <th>WI</th>
+                    <th>WV</th>
+                    <th>WY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- {TABLE_RESULTS} -->
+            </tbody>
+        </table>
+    </div>
+
 </body>
 </html>
