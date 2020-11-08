@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 // GET request handler for '/year/*'
 app.get('/year/:selected_year', (req, res) => {
     console.log(req.params.selected_year);
-    fs.readFile(path.join(template_dir, 'year.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'year.html'), 'utf-8', (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
 
@@ -45,7 +45,7 @@ app.get('/year/:selected_year', (req, res) => {
 // GET request handler for '/state/*'
 app.get('/state/:selected_state', (req, res) => {
     console.log(req.params.selected_state);
-    fs.readFile(path.join(template_dir, 'state.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
 
@@ -56,11 +56,42 @@ app.get('/state/:selected_state', (req, res) => {
 // GET request handler for '/energy/*'
 app.get('/energy/:selected_energy_source', (req, res) => {
     console.log(req.params.selected_energy_source);
-    fs.readFile(path.join(template_dir, 'energy.html'), (err, template) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+    fs.readFile(path.join(template_dir, 'energy.html'), 'utf-8', (err, template) => {
+        db.all("select year, state_abbreviation, ? as energy from Consumption".replace('?',req.params.selected_energy_source),
+        (err,rows) => {
+            if(err) { // return 404 if energy type doesn't exist
+                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_energy_source + '\n');
+            } else {
+                rows = rows.sort((a,b) => { // sort rows by year, then state abbreviation
+                    if(a.year !== b.year) {
+                        return a.year - b.year;
+                    } else {
+                        return a.state_abbreviation.localeCompare(b.state_abbreviation)
+                    }
+                });
+
+                let year = rows[0].year;
+                let tableContents = "<tr><td>" + year + "</td>"
+
+                for(x of rows) {
+                    if(x.year != year) { // at end of row, increment to next year
+                        tableContents += "</tr>\n<tr><td>" + x.year + "</td>";
+                        year = x.year;
+                    }
+                    tableContents += "<td id = \"" + x.state_abbreviation + "_" + x.year + "\">" + x.energy + "</td>"
+                }
+
+                // update template contents
+                sourceCapitalized = req.params.selected_energy_source.charAt(0).toUpperCase()
+                    + req.params.selected_energy_source.slice(1);
+
+                template = template.replace('{ENERGY_TYPE}',sourceCapitalized);
+                template = template.replace("{TABLE}",tableContents);
+
+                res.status(200).type('html').send(template);
+            }
+        });
     });
 });
 
