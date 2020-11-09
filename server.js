@@ -72,14 +72,14 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                 });
 
                 let year = rows[0].year;
-                let tableContents = "<tr><td>" + year + "</td>"
+                let tableContents = "<tr><td class = \"yearColumn\">" + year + "</td>"
 
                 for(x of rows) {
                     if(x.year != year) { // at end of row, increment to next year
-                        tableContents += "</tr>\n<tr><td>" + x.year + "</td>";
+                        tableContents += "</tr>\n<tr><td class = \"yearColumn\">" + x.year + "</td>";
                         year = x.year;
                     }
-                    tableContents += "<td id = \"" + x.state_abbreviation + "_" + x.year + "\">" + x.energy + "</td>"
+                    tableContents += "<td id = \"" + x.state_abbreviation + "_" + x.year + "\" class = \"valueCell\">" + x.energy + "</td>"
                 }
 
                 // update template contents

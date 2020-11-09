@@ -35,13 +35,31 @@ h1
 #graphContainer
 {
     background-color: blue;
-    height: 20rem;
+    height: 50rem;
     float: left;
-    width: 20rem;
+    width: 50rem;
     margin: 1rem;
 }
 
 #tableContainer
 {
     clear: left;
+    margin: 1rem;
+    max-height: 50vh;
+    max-width: 50vw;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+table, th, td
+{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    padding: .1rem .1rem;
+}
+
+.yearColumn
+{
+    color: red;
 }

@@ -12,22 +12,258 @@
         var energy_type;
         var energy_counts;  // e.g. {AK: [...], AL: [...], AR: [...], ...}
 
-        function graph() { //TODO currently graphs dummy values instead of real ones
-            var data = [{
-                values: [19, 26, 55],
-                labels: ['Residential', 'Non-Residential', 'Utility'],
-                type: 'pie'
-            }];
+        energy_counts = [
+            {
+                "state" : 'AK',
+                "values" : []
+            },
+            {
+                "state" : 'AL',
+                "values" : []
+            },
+            {
+                "state" : 'AR',
+                "values" : []
+            },
+            {
+                "state" : 'AZ',
+                "values" : []
+            },
+            {
+                "state" : 'CA',
+                "values" : []
+            },
+            {
+                "state" : 'CO',
+                "values" : []
+            },
+            {
+                "state" : 'CT',
+                "values" : []
+            },
+            {
+                "state" : 'DC',
+                "values" : []
+            },
+            {
+                "state" : 'DE',
+                "values" : []
+            },
+            {
+                "state" : 'FL',
+                "values" : []
+            },
+            {
+                "state" : 'GA',
+                "values" : []
+            },
+            {
+                "state" : 'HI',
+                "values" : []
+            },
+            {
+                "state" : 'IA',
+                "values" : []
+            },
+            {
+                "state" : 'ID',
+                "values" : []
+            },
+            {
+                "state" : 'IL',
+                "values" : []
+            },
+            {
+                "state" : 'IN',
+                "values" : []
+            },
+            {
+                "state" : 'KS',
+                "values" : []
+            },
+            {
+                "state" : 'KY',
+                "values" : []
+            },
+            {
+                "state" : 'LA',
+                "values" : []
+            },
+            {
+                "state" : 'MA',
+                "values" : []
+            },
+            {
+                "state" : 'MD',
+                "values" : []
+            },
+            {
+                "state" : 'ME',
+                "values" : []
+            },
+            {
+                "state" : 'MI',
+                "values" : []
+            },
+            {
+                "state" : 'MN',
+                "values" : []
+            },
+            {
+                "state" : 'MO',
+                "values" : []
+            },
+            {
+                "state" : 'MS',
+                "values" : []
+            },
+            {
+                "state" : 'MT',
+                "values" : []
+            },
+            {
+                "state" : 'NC',
+                "values" : []
+            },
+            {
+                "state" : 'ND',
+                "values" : []
+            },
+            {
+                "state" : 'NE',
+                "values" : []
+            },
+            {
+                "state" : 'NH',
+                "values" : []
+            },
+            {
+                "state" : 'NJ',
+                "values" : []
+            },
+            {
+                "state" : 'NM',
+                "values" : []
+            },
+            {
+                "state" : 'NV',
+                "values" : []
+            },
+            {
+                "state" : 'NY',
+                "values" : []
+            },
+            {
+                "state" : 'OH',
+                "values" : []
+            },
+            {
+                "state" : 'OK',
+                "values" : []
+            },
+            {
+                "state" : 'OR',
+                "values" : []
+            },
+            {
+                "state" : 'PA',
+                "values" : []
+            },
+            {
+                "state" : 'RI',
+                "values" : []
+            },
+            {
+                "state" : 'SC',
+                "values" : []
+            },
+            {
+                "state" : 'SD',
+                "values" : []
+            },
+            {
+                "state" : 'TN',
+                "values" : []
+            },
+            {
+                "state" : 'TX',
+                "values" : []
+            },
+            {
+                "state" : 'UT',
+                "values" : []
+            },
+            {
+                "state" : 'VA',
+                "values" : []
+            },
+            {
+                "state" : 'VT',
+                "values" : []
+            },
+            {
+                "state" : 'WA',
+                "values" : []
+            },
+            {
+                "state" : 'WI',
+                "values" : []
+            },
+            {
+                "state" : 'WV',
+                "values" : []
+            },
+            {
+                "state" : 'WY',
+                "values" : []
+            }
+        ]
+        
+        function graph() {
 
-            var layout = {
-                height: document.getElementById('graphContainer').style.height,
-                width: document.getElementById('graphContainer').style.width
-            };
+            energy_type = document.getElementById('energyType').innerHTML;
 
-            Plotly.newPlot('graphContainer', data, layout);
+            let cells = document.getElementsByClassName('valueCell');
+
+            let contents = []
+
+            for(x of cells) { // creates a list of the element ids
+                contents.push(x.id)
+            }
+
+            for(x of contents) { // fills out values for var energy_counts
+                for(y of energy_counts) {
+                    if(y.state === x.split('_')[0]) {
+                        y.values.push(document.getElementById(x).innerHTML);
+                        break;
+                    }
+                }
+            }
+
+            var years = []
+            for(let i = 1960;i <= 2018;i++) {
+                years.push(i)
+            }
+
+            var traces = []
+            for(x of energy_counts) { // fills out list of data for Plotly to graph
+                traces.push({
+                    x : years,
+                    y : x.values,
+                    mode : 'lines+markers',
+                    name : x.state
+                })
+            }
+
+            var layout = { // layout object for Plotly
+                title : 'Plot'
+            }
+
+            Plotly.newPlot('graphContainer', traces, layout);
         }
     </script>
 </head>
+
 <body onload = "graph()">
     <!-- create template here -->
 
@@ -37,7 +273,7 @@
         <h2 class = 'navlink'><a href = ''>Year</a></h2>
     </div>
 
-    <h1>{ENERGY_TYPE}</h1>
+    <h1 id = "energyType">{ENERGY_TYPE}</h1>
     <div id = imageContainer>
 
     </div>
@@ -49,58 +285,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Year</th>
-                    <th>AK</th>
-                    <th>AL</th>
-                    <th>AR</th>
-                    <th>AZ</th>
-                    <th>CA</th>
-                    <th>CO</th>
-                    <th>CT</th>
-                    <th>DC</th>
-                    <th>DE</th>
-                    <th>FL</th>
-                    <th>GA</th>
-                    <th>HI</th>
-                    <th>IA</th>
-                    <th>ID</th>
-                    <th>IL</th>
-                    <th>IN</th>
-                    <th>KS</th>
-                    <th>KY</th>
-                    <th>LA</th>
-                    <th>MA</th>
-                    <th>MD</th>
-                    <th>ME</th>
-                    <th>MI</th>
-                    <th>MN</th>
-                    <th>MO</th>
-                    <th>MS</th>
-                    <th>MT</th>
-                    <th>NC</th>
-                    <th>ND</th>
-                    <th>NE</th>
-                    <th>NH</th>
-                    <th>NJ</th>
-                    <th>NM</th>
-                    <th>NV</th>
-                    <th>NY</th>
-                    <th>OH</th>
-                    <th>OK</th>
-                    <th>OR</th>
-                    <th>PA</th>
-                    <th>RI</th>
-                    <th>SC</th>
-                    <th>SD</th>
-                    <th>TN</th>
-                    <th>TX</th>
-                    <th>UT</th>
-                    <th>VA</th>
-                    <th>VT</th>
-                    <th>WA</th>
-                    <th>WI</th>
-                    <th>WV</th>
-                    <th>WY</th>
+                    <th class = "yearColumn">Year</th><th>AK</th><th>AL</th><th>AR</th><th>AZ</th><th>CA</th><th>CO</th><th>CT</th><th>DC</th><th>DE</th><th>FL</th><th>GA</th><th>HI</th><th>IA</th><th>ID</th><th>IL</th><th>IN</th><th>KS</th><th>KY</th><th>LA</th><th>MA</th><th>MD</th><th>ME</th><th>MI</th><th>MN</th><th>MO</th><th>MS</th><th>MT</th><th>NC</th><th>ND</th><th>NE</th><th>NH</th><th>NJ</th><th>NM</th><th>NV</th><th>NY</th><th>OH</th><th>OK</th><th>OR</th><th>PA</th><th>RI</th><th>SC</th><th>SD</th><th>TN</th><th>TX</th><th>UT</th><th>VA</th><th>VT</th><th>WA</th><th>WI</th><th>WV</th><th>WY</th>
                 </tr>
             </thead>
             <tbody>
