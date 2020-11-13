@@ -256,7 +256,7 @@
             }
 
             var layout = { // layout object for Plotly
-                title : 'Plot'
+                title : 'Energy Generated Using ' + energy_type + ' Per State Per Year'
             }
 
             Plotly.newPlot('graphContainer', traces, layout);
@@ -275,7 +275,7 @@
 
     <h1 id = "energyType">{ENERGY_TYPE}</h1>
     <div id = imageContainer>
-
+        <img height = 500 src='/images/energy/{IMAGE}'/>
     </div>
     <div id = graphContainer>
         

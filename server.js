@@ -85,9 +85,11 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                 // update template contents
                 sourceCapitalized = req.params.selected_energy_source.charAt(0).toUpperCase()
                     + req.params.selected_energy_source.slice(1);
+                sourceCapitalized = (sourceCapitalized=="Natural_gas") ? "Natural Gas" : sourceCapitalized; // removes underscore from natural gas
 
                 template = template.replace('{ENERGY_TYPE}',sourceCapitalized);
                 template = template.replace("{TABLE}",tableContents);
+                template = template.replace("{IMAGE}",req.params.selected_energy_source+'.jpg')
 
                 res.status(200).type('html').send(template);
             }

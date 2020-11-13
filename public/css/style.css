@@ -25,28 +25,25 @@ h1
 
 #imageContainer
 {
-    background-color: red;
-    height: 20rem;
     float: left;
-    width: 20rem;
     margin: 1rem;
 }
 
 #graphContainer
 {
-    background-color: blue;
-    height: 50rem;
+    height: 500px;
     float: left;
-    width: 50rem;
+    width: 40rem;
     margin: 1rem;
+    clear : right;
 }
 
 #tableContainer
 {
     clear: left;
-    margin: 1rem;
+    margin: 2rem auto;
     max-height: 50vh;
-    max-width: 50vw;
+    max-width: 90vw;
     overflow-x: scroll;
     overflow-y: scroll;
 }
@@ -57,9 +54,4 @@ table, th, td
     border-collapse: collapse;
     text-align: center;
     padding: .1rem .1rem;
-}
-
-.yearColumn
-{
-    color: red;
 }
