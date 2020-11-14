@@ -6,8 +6,9 @@
 
 #navbar
 {
-    background-color: blue;
     clear: right;
+    padding-top: 1rem;
+    padding-left: 1rem;
 }
 
 .navlink
