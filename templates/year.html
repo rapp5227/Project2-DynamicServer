@@ -5,15 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="application/javascript">
         // `year` and total counts for entire US => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
         var year;
-        var coal_count;
-        var natural_gas_count;
-        var nuclear_count;
-        var petroleum_count;
-        var renewable_count;
+        var coal_count = 0;
+        var natural_gas_count = 0;
+        var nuclear_count = 0;
+        var petroleum_count = 0;
+        var renewable_count = 0;
+        var total_count = 0;
+
+    function graph() {
+        year = document.getElementById('yearID').innerHTML;
+
+        var coalCells = document.getElementsByClassName('valueCoal');
+        var ngCells = document.getElementsByClassName('valueNG');
+        var nuclearCells = document.getElementsByClassName('valueNuclear');
+        var petroleumCells = document.getElementsByClassName('valuePetroleum');
+        var renewableCells = document.getElementsByClassName('valueRenewable');
+        var totalCells = document.getElementsByClassName('valueTotal');
+
+        console.log(coalCells);
+
+        for (var i = 0; i < coalCells.length; i++) {
+            coal_count = coal_count + parseInt(coalCells[i].innerHTML);
+        }
+
+        for (var i = 0; i < ngCells.length; i++) {
+            natural_gas_count = natural_gas_count + parseInt(ngCells[i].innerHTML);
+        }
+
+        for (var i = 0; i < nuclearCells.length; i++) {
+            nuclear_count = nuclear_count + parseInt(nuclearCells[i].innerHTML);
+        }
+
+        for (var i = 0; i < petroleumCells.length; i++) {
+            petroleum_count = petroleum_count + parseInt(petroleumCells[i].innerHTML);
+        }
+
+        for (var i = 0; i < renewableCells.length; i++) {
+            renewable_count = renewable_count + parseInt(renewableCells[i].innerHTML);
+        }
+
+        for (var i = 0; i < totalCells.length; i++) {
+            total_count = total_count + parseInt(totalCells[i].innerHTML);
+        }
+        
+        var chartData = [
+            {
+                x: ['Coal', 'Natural Gas', 'Nuclear', 'Petroleum', 'Renewable', 'Total'],
+                y: [coal_count, natural_gas_count, nuclear_count, petroleum_count, renewable_count, total_count],
+                type: 'bar'
+            }
+        ];
+        
+        var layout = {
+            title: "Energy Consumption for entire US: " + year + " (Billion BTU)"
+        };
+
+        Plotly.newPlot('graphContainer', chartData, layout);
+
+    }
 
         function stateNavigate() {
             let value = document.getElementById('states').value;
@@ -37,7 +91,9 @@
         }
     </script>
 </head>
-<body>
+<body onload = "graph()">
+    <!-- create template here -->
+
     <div id = 'navbar'>
         <label for="states">States:</label>
         <select id = "states" name = "states">
@@ -168,7 +224,7 @@
         <button type = "button" onclick = "energyNavigate()">Go</button>
     </div>
     
-    <h1>{YEAR}</h1>
+    <h1 id = "yearID">{YEAR}</h1>
     <div id = imageContainer>
     
     </div>
@@ -180,17 +236,17 @@
         <table>
             <thead>
                 <tr>
-                    <th>State</th>
-                    <th>Coal</th>
-                    <th>Natural Gas</th>
-                    <th>Nuclear</th>
-                    <th>Petroleum</th>
-                    <th>Renewable</th>
-                    <th>Total</th>
+                    <th class = "stateColumn">State</th>
+                    <th class = "coalColumn">Coal</th>
+                    <th class = "ngColumn">Natural Gas</th>
+                    <th class = "nuclearColumn">Nuclear</th>
+                    <th class = "petroleumColumn">Petroleum</th>
+                    <th class = "renewColumn">Renewable</th>
+                    <th class = "totalColumn">Total</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- {TABLE_RESULTS} -->
+                {TABLE_RESULTS}
             </tbody>
         </table>
     </div>

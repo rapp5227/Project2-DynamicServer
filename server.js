@@ -34,11 +34,49 @@ app.get('/', (req, res) => {
 // GET request handler for '/year/*'
 app.get('/year/:selected_year', (req, res) => {
     console.log(req.params.selected_year);
+    
     fs.readFile(path.join(template_dir, 'year.html'), 'utf-8', (err, template) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
+        db.all("select year, state_abbreviation, coal, natural_gas, nuclear, petroleum, renewable, ? as year from Consumption".replace('?',req.params.selected_year),
+        (err,rows) => {
+            if(err || req.params.selected_year < 1960 || req.params.selected_year > 2018) { // return 404 if year doesn't exist
+                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_year + '\n');
+            } else {
+                rows = rows.sort((a,b) => { // sort by state abbreviation
+                    return a.state_abbreviation.localeCompare(b.state_abbreviation)
+                });
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+                let state_abbreviation = rows[0].state_abbreviation;
+                let tableContents = "<tr><td class = \"stateColumn\">" + state_abbreviation + "</td>"
+                
+                var x = req.params.selected_year - 1960;
+                
+                for(x; x < rows.length; x+=59) {
+                    
+                    if(rows[x].state_abbreviation != state_abbreviation) { // at end of row, increment to next state
+                        state_abbreviation = rows[x].state_abbreviation;
+                        tableContents += "</tr>\n<tr><td class = \"stateColumn\">" + rows[x].state_abbreviation + "</td>";
+                        
+                    }
+                    tableContents += "<td class = \"valueCoal\">" + rows[x].coal + "</td>";
+                    tableContents += "<td class = \"valueNG\">" + rows[x].natural_gas + "</td>";
+                    tableContents += "<td class = \"valueNuclear\">" + rows[x].nuclear + "</td>";
+                    tableContents += "<td class = \"valuePetroleum\">" + rows[x].petroleum + "</td>";
+                    tableContents += "<td class = \"valueRenewable\">" + rows[x].renewable + "</td>";
+                    var total = rows[x].coal + rows[x].natural_gas + rows[x].nuclear + rows[x].petroleum + rows[x].renewable;
+                    tableContents += "<td class = \"valueTotal\">" + total + "</td></tr>";
+                }
+
+                // update template contents
+                sourceCapitalized = req.params.selected_year.charAt(0).toUpperCase()
+                    + req.params.selected_year.slice(1);
+
+                template = template.replace('{YEAR}',sourceCapitalized);
+                template = template.replace("{TABLE_RESULTS}",tableContents);
+                template = template.replace("{IMAGE}",req.params.selected_energy_source+'.jpg');
+
+                res.status(200).type('html').send(template); // <-- you may need to change this
+            }
+        });
     });
 });
 
