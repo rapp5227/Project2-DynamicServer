@@ -16,7 +16,6 @@
         var petroleum_counts;
         var renewable_counts;
 
-<<<<<<< HEAD
         function graph() {
             var years = [];
 
@@ -42,10 +41,8 @@
 
         function navigate(path) {
             let value = document.getElementById(path).value;
-=======
         function stateNavigate(opt) {
             let value = document.getElementById('state').value;
->>>>>>> b25345c30ecf8911bd765bcdd24aae46822f7d6a
             let newPage = new URL(window.location.href);
             newPage.pathname = '/state/' + value;
             window.location.href = newPage.href
