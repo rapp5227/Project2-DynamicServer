@@ -218,7 +218,7 @@
                 "values" : []
             }
         ]
-        
+
         function graph() {
 
             energy_type = document.getElementById('energyType').innerHTML;
@@ -227,13 +227,13 @@
 
             let contents = []
 
-            for(x of cells) { // creates a list of the element ids
+            for (x of cells) { // creates a list of the element ids
                 contents.push(x.id)
             }
 
-            for(x of contents) { // fills out values for var energy_counts
-                for(y of energy_counts) {
-                    if(y.state === x.split('_')[0]) {
+            for (x of contents) { // fills out values for var energy_counts
+                for (y of energy_counts) {
+                    if (y.state === x.split('_')[0]) {
                         y.values.push(document.getElementById(x).innerHTML);
                         break;
                     }
@@ -241,12 +241,12 @@
             }
 
             var years = []
-            for(let i = 1960;i <= 2018;i++) {
+            for (let i = 1960; i <= 2018; i++) {
                 years.push(i)
             }
 
             var traces = []
-            for(x of energy_counts) { // fills out list of data for Plotly to graph
+            for (x of energy_counts) { // fills out list of data for Plotly to graph
                 traces.push({
                     x : years,
                     y : x.values,
@@ -265,10 +265,45 @@
         function navigate(path) {
             let value = document.getElementById(path).value;
             let newPage = new URL(window.location.href);
-            newPage.pathname = '/' + path + '/' + value;
-            window.location.href = newPage.href  
+            newPage.pathname = '/state/' + value;
+            window.location.href = newPage.href
+        }
+
+        function yearNavigate() {
+            let value = document.getElementById('years').value;
+            let newPage = new URL(window.location.href);
+            newPage.pathname = '/year/' + value;
+            window.location.href = newPage.href
+        }
+
+        function energyNavigate(opt) {
+            let newPage = new URL(window.location.href);
+            let current = document.getElementById("energyType").innerHTML.toLowerCase();
+            let values = ['coal', 'natural gas', 'nuclear', 'petroleum', 'renewable']
+            let i = values.indexOf(current)
+            let value;
+
+            if (opt === 'next') {
+                i += 1;
+                value = (i > 4) ? 'coal' : values[i];
+            } else if (opt === 'prev') {
+                i -= 1;
+                value = (i < 0) ? 'renewable' : values[i];
+            } else {
+                value = document.getElementById('energy').value;
+            }
+            value = value.replace(' ', '_') // ensures underscore on natural_gas
+
+            newPage.pathname = '/energy/' + value;
+            window.location.href = newPage.href
         }
     </script>
+    <style>
+        #buttons
+        {
+            clear: left;
+        }
+    </style>
 </head>
 
 <body onload = "graph()">
@@ -390,11 +425,11 @@
             <option value = "2015">2015</option>
             <option value = "2016">2016</option>
             <option value = "2017">2017</option>
-            <option value = "2018">2018</option>            
+            <option value = "2018">2018</option>
         </select>
         <button type = "button" onclick = "navigate('year')">Go</button>
         <label for = "energy">Energy:</label>
-        <select id = "energy"  name = "energy">
+        <select id = "energy" name = "energy">
             <option value = "coal">Coal</option>
             <option value = "natural_gas">Natural Gas</option>
             <option value = "nuclear">Nuclear</option>
@@ -406,17 +441,72 @@
 
     <h1 id = "energyType">{ENERGY_TYPE}</h1>
     <div id = imageContainer>
-        <img height = 500 src='/images/energy/{IMAGE}'/>
+        <img height = 500 src = '/images/energy/{IMAGE}' />
     </div>
     <div id = graphContainer>
-        
+
     </div>
-    
+
+    <div id = "buttons">
+        <button type = "button" onclick = "energyNavigate('next')">Next</button>
+        <button type = "button" onclick = "energyNavigate('prev')">Previous</button>
+    </div>
     <div id = 'tableContainer'>
         <table>
             <thead>
                 <tr>
-                    <th class = "yearColumn">Year</th><th>AK</th><th>AL</th><th>AR</th><th>AZ</th><th>CA</th><th>CO</th><th>CT</th><th>DC</th><th>DE</th><th>FL</th><th>GA</th><th>HI</th><th>IA</th><th>ID</th><th>IL</th><th>IN</th><th>KS</th><th>KY</th><th>LA</th><th>MA</th><th>MD</th><th>ME</th><th>MI</th><th>MN</th><th>MO</th><th>MS</th><th>MT</th><th>NC</th><th>ND</th><th>NE</th><th>NH</th><th>NJ</th><th>NM</th><th>NV</th><th>NY</th><th>OH</th><th>OK</th><th>OR</th><th>PA</th><th>RI</th><th>SC</th><th>SD</th><th>TN</th><th>TX</th><th>UT</th><th>VA</th><th>VT</th><th>WA</th><th>WI</th><th>WV</th><th>WY</th>
+                    <th class = "yearColumn">Year</th>
+                    <th>AK</th>
+                    <th>AL</th>
+                    <th>AR</th>
+                    <th>AZ</th>
+                    <th>CA</th>
+                    <th>CO</th>
+                    <th>CT</th>
+                    <th>DC</th>
+                    <th>DE</th>
+                    <th>FL</th>
+                    <th>GA</th>
+                    <th>HI</th>
+                    <th>IA</th>
+                    <th>ID</th>
+                    <th>IL</th>
+                    <th>IN</th>
+                    <th>KS</th>
+                    <th>KY</th>
+                    <th>LA</th>
+                    <th>MA</th>
+                    <th>MD</th>
+                    <th>ME</th>
+                    <th>MI</th>
+                    <th>MN</th>
+                    <th>MO</th>
+                    <th>MS</th>
+                    <th>MT</th>
+                    <th>NC</th>
+                    <th>ND</th>
+                    <th>NE</th>
+                    <th>NH</th>
+                    <th>NJ</th>
+                    <th>NM</th>
+                    <th>NV</th>
+                    <th>NY</th>
+                    <th>OH</th>
+                    <th>OK</th>
+                    <th>OR</th>
+                    <th>PA</th>
+                    <th>RI</th>
+                    <th>SC</th>
+                    <th>SD</th>
+                    <th>TN</th>
+                    <th>TX</th>
+                    <th>UT</th>
+                    <th>VA</th>
+                    <th>VT</th>
+                    <th>WA</th>
+                    <th>WI</th>
+                    <th>WV</th>
+                    <th>WY</th>
                 </tr>
             </thead>
             <tbody>
