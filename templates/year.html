@@ -52,7 +52,7 @@
         for (var i = 0; i < totalCells.length; i++) {
             total_count = total_count + parseInt(totalCells[i].innerHTML);
         }
-        
+
         var chartData = [
             {
                 x: ['Coal', 'Natural Gas', 'Nuclear', 'Petroleum', 'Renewable', 'Total'],
@@ -60,7 +60,7 @@
                 type: 'bar'
             }
         ];
-        
+
         var layout = {
             title: "Energy Consumption for entire US: " + year + " (Billion BTU)"
         };
@@ -69,11 +69,25 @@
 
     }
 
-        function navigate(path) {
-            let value = document.getElementById(path).value;
+    function stateNavigate(opt) {
+            let value = document.getElementById('state').value;
             let newPage = new URL(window.location.href);
-            newPage.pathname = '/' + path + '/' + value;
-            window.location.href = newPage.href  
+            newPage.pathname = '/state/' + value;
+            window.location.href = newPage.href
+        }
+
+        function yearNavigate(opt) {
+            let value = document.getElementById('year').value;
+            let newPage = new URL(window.location.href);
+            newPage.pathname = '/year/' + value;
+            window.location.href = newPage.href
+        }
+
+        function energyNavigate(opt) {
+            let value = document.getElementById('energy').value;
+            let newPage = new URL(window.location.href);
+            newPage.pathname = '/energy/' + value;
+            window.location.href = newPage.href
         }
     </script>
 </head>
@@ -81,7 +95,7 @@
     <!-- create template here -->
 
     <div id = 'navbar'>
-        <button type="button" onclick="navigate('state')">Prev</button>
+        <button type="button" onclick="yearNavigate('prev')">Prev</button>
         <label for="state">States:</label>
         <select id = "state" name = "state">
             <option value = "AK">AK</option>
@@ -136,7 +150,7 @@
             <option value = "WV">WV</option>
             <option value = "WY">WY</option>
         </select>
-        <button type="button" onclick="navigate('state')">Go</button>
+        <button type="button" onclick="stateNavigate()">Go</button>
         <label for="year">Years:</label>
         <select id = "year" name = "year" onload = "fillYears()">
             <option value = "1960">1960</option>
@@ -197,9 +211,9 @@
             <option value = "2015">2015</option>
             <option value = "2016">2016</option>
             <option value = "2017">2017</option>
-            <option value = "2018">2018</option>            
+            <option value = "2018">2018</option>
         </select>
-        <button type = "button" onclick = "navigate('year')">Go</button>
+        <button type = "button" onclick = "yearNavigate()">Go</button>
         <label for = "energy">Energy:</label>
         <select id = "energy"  name = "energy">
             <option value = "coal">Coal</option>
@@ -208,18 +222,18 @@
             <option value = "petroleum">Petroleum</option>
             <option value = "renewable">Renewable</option>
         </select>
-        <button type = "button" onclick = "navigate('energy')">Go</button>
-        <button type = "button" onclick = "navigate('energy')">Next</button>
+        <button type = "button" onclick = "energyNavigate()">Go</button>
+        <button type = "button" onclick = "yearNavigate('next')">Next</button>
     </div>
-    
+
     <h1 id = "yearID">{YEAR}</h1>
     <div id = imageContainer>
-    
+
     </div>
     <div id = graphContainer>
-        
+
     </div>
-    
+
     <div id = 'tableContainer'>
         <table>
             <thead>
@@ -238,6 +252,6 @@
             </tbody>
         </table>
     </div>
-    
+
     </body>
 </html>
