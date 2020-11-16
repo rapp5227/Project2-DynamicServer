@@ -262,24 +262,10 @@
             Plotly.newPlot('graphContainer', traces, layout);
         }
 
-        function stateNavigate() {
-            let value = document.getElementById('states').value;
+        function navigate(path) {
+            let value = document.getElementById(path).value;
             let newPage = new URL(window.location.href);
-            newPage.pathname = '/state/' + value;
-            window.location.href = newPage.href
-        }
-
-        function yearNavigate() {
-            let value = document.getElementById('years').value;
-            let newPage = new URL(window.location.href);
-            newPage.pathname = '/year/' + value;
-            window.location.href = newPage.href
-        }
-
-        function energyNavigate() {
-            let value = document.getElementById('energy').value;
-            let newPage = new URL(window.location.href);
-            newPage.pathname = '/energy/' + value;
+            newPage.pathname = '/' + path + '/' + value;
             window.location.href = newPage.href  
         }
     </script>
@@ -287,10 +273,10 @@
 
 <body onload = "graph()">
     <!-- create template here -->
-
+    
     <div id = 'navbar'>
-        <label for="states">States:</label>
-        <select id = "states" name = "states">
+        <label for="state">States:</label>
+        <select id = "state" name = "state">
             <option value = "AK">AK</option>
             <option value = "AL">AL</option>
             <option value = "AR">AR</option>
@@ -343,9 +329,9 @@
             <option value = "WV">WV</option>
             <option value = "WY">WY</option>
         </select>
-        <button type="button" onclick="stateNavigate()">Go</button>
-        <label for="years">Years:</label>
-        <select id = "years" name = "years" onload = "fillYears()">
+        <button type="button" onclick="navigate('state')">Go</button>
+        <label for="year">Years:</label>
+        <select id = "year" name = "year" onload = "fillYears()">
             <option value = "1960">1960</option>
             <option value = "1961">1961</option>
             <option value = "1962">1962</option>
@@ -406,7 +392,7 @@
             <option value = "2017">2017</option>
             <option value = "2018">2018</option>            
         </select>
-        <button type = "button" onclick = "yearNavigate()">Go</button>
+        <button type = "button" onclick = "navigate('year')">Go</button>
         <label for = "energy">Energy:</label>
         <select id = "energy"  name = "energy">
             <option value = "coal">Coal</option>
@@ -415,7 +401,7 @@
             <option value = "petroleum">Petroleum</option>
             <option value = "renewable">Renewable</option>
         </select>
-        <button type = "button" onclick = "energyNavigate()">Go</button>
+        <button type = "button" onclick = "navigate('energy')">Go</button>
     </div>
 
     <h1 id = "energyType">{ENERGY_TYPE}</h1>
