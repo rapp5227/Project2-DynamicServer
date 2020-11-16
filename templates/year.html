@@ -95,6 +95,7 @@
     <!-- create template here -->
 
     <div id = 'navbar'>
+        <button type="button" onclick="stateNavigate()">Prev</button>
         <label for="states">States:</label>
         <select id = "states" name = "states">
             <option value = "AK">AK</option>
@@ -222,6 +223,7 @@
             <option value = "renewable">Renewable</option>
         </select>
         <button type = "button" onclick = "energyNavigate()">Go</button>
+        <button type = "button" onclick = "energyNavigate()">Next</button>
     </div>
     
     <h1 id = "yearID">{YEAR}</h1>
