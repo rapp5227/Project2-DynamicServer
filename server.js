@@ -84,8 +84,8 @@ app.get('/year/:selected_year', (req, res) => {
 app.get('/state/:selected_state', (req, res) => {
     console.log(req.params.selected_state);
     fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
-        db.all("select year, coal, natural_gas, nuclear, petroleum, renewable, ? as state from Consumption".replace('?', req.params.selected_state), 
-        (err, rows => {
+        db.all("select year, coal, natural_gas, nuclear, petroleum, renewable from Consumption where state_abbreviation is '?'".replace('?', req.params.selected_state), 
+        (err, rows) => {
             if (err) {
                 res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_state + '\n');
             }
@@ -98,30 +98,69 @@ app.get('/state/:selected_state', (req, res) => {
                 let year = rows[0].year;
                 let tableContents = "<tr><td class = \"yearColumn\">" + year + "</td>"
 
+                var coal_counts = [];
+                var natural_gas_counts = [];
+                var nuclear_counts = [];
+                var petroleum_counts = [];
+                var renewable_counts = [];
+
                 for (x of rows) {
                     if(x.year != year) { // at end of row, increment to next year
                         tableContents += "</tr>\n<tr><td class = \"yearColumn\">" + x.year + "</td>";
                         year = x.year;
                     }
-                    tableContents += "<td class = \"valueCoal\">" + rows[x].coal + "</td>";
-                    tableContents += "<td class = \"valueNG\">" + rows[x].natural_gas + "</td>";
-                    tableContents += "<td class = \"valueNuclear\">" + rows[x].nuclear + "</td>";
-                    tableContents += "<td class = \"valuePetroleum\">" + rows[x].petroleum + "</td>";
-                    tableContents += "<td class = \"valueRenewable\">" + rows[x].renewable + "</td>";
-                    var total = rows[x].coal + rows[x].natural_gas + rows[x].nuclear + rows[x].petroleum + rows[x].renewable;
+                    tableContents += "<td class = \"valueCoal\">" + x.coal + "</td>";
+                    tableContents += "<td class = \"valueNG\">" + x.natural_gas + "</td>";
+                    tableContents += "<td class = \"valueNuclear\">" + x.nuclear + "</td>";
+                    tableContents += "<td class = \"valuePetroleum\">" + x.petroleum + "</td>";
+                    tableContents += "<td class = \"valueRenewable\">" + x.renewable + "</td>";
+                    var total = x.coal + x.natural_gas + x.nuclear + x.petroleum + x.renewable;
                     tableContents += "<td class = \"valueTotal\">" + total + "</td></tr>";
+
+                    coal_counts.push(x.coal);
+                    natural_gas_counts.push(x.natural_gas);
+                    nuclear_counts.push(x.nuclear);
+                    petroleum_counts.push(x.petroleum);
+                    renewable_counts.push(x.renewable);
                     // update template contents
                 }
 
-                sourceCapitalized = req.params.selected_state.charAt(0).toUpperCase()
-                    + req.params.selected_year.slice(1);
+                stateName = req.params.selected_state.charAt(0).toUpperCase()
+                   + req.params.selected_state.slice(1);
 
-                template = template.replace('{YEAR}',sourceCapitalized);
+                template = template.replace('{STATETABLE}',stateName);
+                template = template.replace('{STATETITLE}',stateName);
                 template = template.replace("{TABLE_RESULTS}",tableContents);
-                template = template.replace("{IMAGE}",req.params.selected_state+'.jpg');
+                template = template.replace("{IMAGE}",req.params.selected_state+'.png');
+                template = template.replace("var coal_counts", "var coal_counts = [" + coal_counts + "]");
+                template = template.replace("var natural_gas_counts", "var natural_gas_counts = [" + natural_gas_counts + "]");
+                template = template.replace("var nuclear_counts", "var nuclear_counts = [" + nuclear_counts + "]");
+                template = template.replace("var petroleum_counts", "var petroleum_counts = [" + petroleum_counts + "]");
+                template = template.replace("var renewable_counts", "var renewable_counts = [" + renewable_counts + "]");
+                res.status(200).type('html').send(template); // <-- you may need to change this
             }
-        }));
-        res.status(200).type('html').send(template); // <-- you may need to change this
+        });
+    });
+});
+
+//GET request for the Full State Name
+app.get('/state/:selected_state', (req, res) => {
+    console.log(req.params.selected_state);
+    fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
+        db.all("select state_name from States where state_abbreviation is '?'".replace('?', req.params.selected_state), 
+        (err, rows) => {
+            if (err) {
+                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_state + '\n');
+            }
+            else {
+                var stateName;
+                for (x of rows) {
+                    stateName = x.state_name;
+                }
+                template = template.replace('{STATE}',stateName);
+                res.status(200).type('html').send(template); // <-- you may need to change this
+            } 
+        });
     });
 });
 
