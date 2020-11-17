@@ -39,7 +39,7 @@ app.get('/year/:selected_year', (req, res) => {
         db.all("select year, state_abbreviation, coal, natural_gas, nuclear, petroleum, renewable, ? as year from Consumption".replace('?',req.params.selected_year),
         (err,rows) => {
             if(err || req.params.selected_year < 1960 || req.params.selected_year > 2018) { // return 404 if year doesn't exist
-                res.status(404).type('text/plain').send('Error: no data found for year ' + req.params.selected_year + '\n');
+                res.status(404).type('text/plain').send('404 Error: no data found for year ' + req.params.selected_year + '\n');
             } else {
                 rows = rows.sort((a,b) => { // sort by state abbreviation
                     return a.state_abbreviation.localeCompare(b.state_abbreviation)
@@ -87,7 +87,7 @@ app.get('/state/:selected_state', (req, res) => {
         db.all("select state_name from States where state_abbreviation is '?'".replace('?', req.params.selected_state),
         (err, rows) => {
             if (err) {
-                res.status(404).type('text/plain').send('Error: no data found for state ' + req.params.selected_state + '\n');
+                res.status(404).type('text/plain').send('404 Error: no data found for state ' + req.params.selected_state + '\n');
             }
             else {
                 var stateName;
@@ -102,7 +102,7 @@ app.get('/state/:selected_state', (req, res) => {
         db.all("select year, coal, natural_gas, nuclear, petroleum, renewable from Consumption where state_abbreviation is '?'".replace('?', req.params.selected_state),
         (err, rows) => {
             if (err || rows.length === 0) {
-                res.status(404).type('text/plain').send('Error: no data found for state ' + req.params.selected_state + '\n');
+                res.status(404).type('text/plain').send('404 Error: no data found for state ' + req.params.selected_state + '\n');
             }
             else {
                 rows = rows.sort((a,b) => { //Sort by year
@@ -166,7 +166,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         db.all("select year, state_abbreviation, ? as energy from Consumption".replace('?',req.params.selected_energy_source),
         (err,rows) => {
             if(err) { // return 404 if energy type doesn't exist
-                res.status(404).type('text/plain').send('Error: no data found for energy type ' + req.params.selected_energy_source + '\n');
+                res.status(404).type('text/plain').send('404 Error: no data found for energy type ' + req.params.selected_energy_source + '\n');
             } else {
                 rows = rows.sort((a,b) => { // sort rows by year, then state abbreviation
                     if(a.year !== b.year) {
