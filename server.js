@@ -34,12 +34,12 @@ app.get('/', (req, res) => {
 // GET request handler for '/year/*'
 app.get('/year/:selected_year', (req, res) => {
     console.log(req.params.selected_year);
-    
+
     fs.readFile(path.join(template_dir, 'year.html'), 'utf-8', (err, template) => {
         db.all("select year, state_abbreviation, coal, natural_gas, nuclear, petroleum, renewable, ? as year from Consumption".replace('?',req.params.selected_year),
         (err,rows) => {
             if(err || req.params.selected_year < 1960 || req.params.selected_year > 2018) { // return 404 if year doesn't exist
-                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_year + '\n');
+                res.status(404).type('text/plain').send('Error: no data found for year ' + req.params.selected_year + '\n');
             } else {
                 rows = rows.sort((a,b) => { // sort by state abbreviation
                     return a.state_abbreviation.localeCompare(b.state_abbreviation)
@@ -47,15 +47,15 @@ app.get('/year/:selected_year', (req, res) => {
 
                 let state_abbreviation = rows[0].state_abbreviation;
                 let tableContents = "<tr><td class = \"stateColumn\">" + state_abbreviation + "</td>"
-                
+
                 var x = req.params.selected_year - 1960;
-                
+
                 for(x; x < rows.length; x+=59) {
-                    
+
                     if(rows[x].state_abbreviation != state_abbreviation) { // at end of row, increment to next state
                         state_abbreviation = rows[x].state_abbreviation;
                         tableContents += "</tr>\n<tr><td class = \"stateColumn\">" + rows[x].state_abbreviation + "</td>";
-                        
+
                     }
                     tableContents += "<td class = \"valueCoal\">" + rows[x].coal + "</td>";
                     tableContents += "<td class = \"valueNG\">" + rows[x].natural_gas + "</td>";
@@ -84,10 +84,10 @@ app.get('/year/:selected_year', (req, res) => {
 app.get('/state/:selected_state', (req, res) => {
     console.log(req.params.selected_state);
     fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
-        db.all("select state_name from States where state_abbreviation is '?'".replace('?', req.params.selected_state), 
+        db.all("select state_name from States where state_abbreviation is '?'".replace('?', req.params.selected_state),
         (err, rows) => {
             if (err) {
-                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_state + '\n');
+                res.status(404).type('text/plain').send('Error: no data found for state ' + req.params.selected_state + '\n');
             }
             else {
                 var stateName;
@@ -95,12 +95,12 @@ app.get('/state/:selected_state', (req, res) => {
                     stateName = x.state_name;
                 }
                 template = template.replace('{STATETABLE}',stateName);
-                template = template.replace('{STATETITLE}',stateName);            } 
+                template = template.replace('{STATETITLE}',stateName);            }
         });
-        db.all("select year, coal, natural_gas, nuclear, petroleum, renewable from Consumption where state_abbreviation is '?'".replace('?', req.params.selected_state), 
+        db.all("select year, coal, natural_gas, nuclear, petroleum, renewable from Consumption where state_abbreviation is '?'".replace('?', req.params.selected_state),
         (err, rows) => {
-            if (err) {
-                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_state + '\n');
+            if (err || rows.length === 0) {
+                res.status(404).type('text/plain').send('Error: no data found for state ' + req.params.selected_state + '\n');
             }
             else {
                 rows = rows.sort((a,b) => { //Sort by year
@@ -156,27 +156,6 @@ app.get('/state/:selected_state', (req, res) => {
     });
 });
 
-//GET request for the Full State Name
-app.get('/state/:selected_state', (req, res) => {
-    console.log(req.params.selected_state);
-    fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
-        db.all("select state_name from States where state_abbreviation is '?'".replace('?', req.params.selected_state), 
-        (err, rows) => {
-            if (err) {
-                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_state + '\n');
-            }
-            else {
-                var stateName;
-                for (x of rows) {
-                    stateName = x.state_name;
-                }
-                template = template.replace('{STATE}',stateName);
-                res.status(200).type('html').send(template); // <-- you may need to change this
-            } 
-        });
-    });
-});
-
 // GET request handler for '/energy/*'
 app.get('/energy/:selected_energy_source', (req, res) => {
     console.log(req.params.selected_energy_source);
@@ -185,7 +164,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         db.all("select year, state_abbreviation, ? as energy from Consumption".replace('?',req.params.selected_energy_source),
         (err,rows) => {
             if(err) { // return 404 if energy type doesn't exist
-                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_energy_source + '\n');
+                res.status(404).type('text/plain').send('Error: no data found for energy type ' + req.params.selected_energy_source + '\n');
             } else {
                 rows = rows.sort((a,b) => { // sort rows by year, then state abbreviation
                     if(a.year !== b.year) {
@@ -197,15 +176,18 @@ app.get('/energy/:selected_energy_source', (req, res) => {
 
                 let year = rows[0].year;
                 let tableContents = "<tr><td class = \"yearColumn\">" + year + "</td>"
-
+                let yearlySums = []
+                let sum = 0;
                 for(x of rows) {
                     if(x.year != year) { // at end of row, increment to next year
-                        tableContents += "</tr>\n<tr><td class = \"yearColumn\">" + x.year + "</td>";
+                        tableContents += "<td id = \"total_" + x.year + "\">" + sum + "</td></tr>\n<tr><td class = \"yearColumn\">" + x.year + "</td>";
+                        sum = 0;
                         year = x.year;
                     }
                     tableContents += "<td id = \"" + x.state_abbreviation + "_" + x.year + "\" class = \"valueCell\">" + x.energy + "</td>"
+                    sum += x.energy
                 }
-
+                tableContents += "<td id = \"total_" + year + "\">" + sum + "</td></tr>\n"
                 // update template contents
                 sourceCapitalized = req.params.selected_energy_source.charAt(0).toUpperCase()
                     + req.params.selected_energy_source.slice(1);
