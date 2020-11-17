@@ -77,8 +77,18 @@
         }
 
         function yearNavigate(opt) {
-            let value = document.getElementById('year').value;
             let newPage = new URL(window.location.href);
+            let current = Number(document.getElementById("yearID").innerHTML);
+            let value;
+
+            if (opt === 'next') {
+                value = (current === 2018) ? 1960 : current + 1;
+            } else if (opt === 'prev') {
+                value = (current === 1960) ? 2018 : current - 1;
+            } else {
+                value = document.getElementById('year').value;
+            }
+            console.log(value)
             newPage.pathname = '/year/' + value;
             window.location.href = newPage.href
         }

@@ -30,7 +30,7 @@
                 {x: years, y: petroleum_counts, stackgroup: 'one', name : 'Petroleum'},
                 {x: years, y: renewable_counts, stackgroup: 'one', name : "Renewable"},
             ]
-            
+
             var layout = {
                 title: "Energy Consumption for {STATETABLE} per year (Billion BTU)"
             }
@@ -40,8 +40,22 @@
         }
 
         function stateNavigate(opt) {
-            let value = document.getElementById('state').value;
+            let states = ['AK','AL','AR','AZ','CA','CO','CT','DC','DE','FL','GA','HI','IA','ID','IL','IN','KS','KY','LA','MA','MD','ME','MI','MN','MO','MS','MT','NC','ND','NE','NH','NJ','NM','NV','NY','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VA','VT','WA','WI','WV','WY']
+
             let newPage = new URL(window.location.href);
+            let index = states.indexOf(newPage.pathname.split('/').pop());
+            let value;
+
+            if (opt === 'next') {
+                index = (index === 50) ? 0 : index + 1;
+                value = states[index]
+            } else if (opt === 'prev') {
+                index = (index === 0) ? 50 : index - 1;
+                value = states[index]
+            } else {
+                value = document.getElementById('state').value;
+            }
+
             newPage.pathname = '/state/' + value;
             window.location.href = newPage.href
         }
@@ -64,6 +78,7 @@
 </head>
 <body onload = "graph()">
     <div id = 'navbar'>
+        <button type="button" onclick="stateNavigate('prev')">Prev</button>
         <label for="state">States:</label>
         <select id = "state" name = "state">
             <option value = "AK">AK</option>
@@ -179,7 +194,7 @@
             <option value = "2015">2015</option>
             <option value = "2016">2016</option>
             <option value = "2017">2017</option>
-            <option value = "2018">2018</option>            
+            <option value = "2018">2018</option>
         </select>
         <button type = "button" onclick = "yearNavigate('year')">Go</button>
         <label for = "energy">Energy:</label>
@@ -191,16 +206,16 @@
             <option value = "renewable">Renewable</option>
         </select>
         <button type = "button" onclick = "energyNavigate('energy')">Go</button>
-        <button type = "button" onclick = "yearNavigate('year')">Next</button>
+        <button type = "button" onclick = "stateNavigate('next')">Next</button>
     </div>
 
-    <h1 id = "state">{STATETITLE}</h1>
+    <h1 id = "stateTitle">{STATETITLE}</h1>
     <div id = imageContainer>
         <img height='500' src='/images/states/{IMAGE}'/>
 
     </div>
     <div id = graphContainer>
-        
+
     </div>
 
     <div id = 'tableContainer'>

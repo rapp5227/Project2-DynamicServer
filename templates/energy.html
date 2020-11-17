@@ -298,18 +298,13 @@
             window.location.href = newPage.href
         }
     </script>
-    <style>
-        #buttons
-        {
-            clear: left;
-        }
-    </style>
 </head>
 
 <body onload = "graph()">
     <!-- create template here -->
-    
+
     <div id = 'navbar'>
+        <button type = "button" onclick = "energyNavigate('prev')">Previous</button>
         <label for="state">States:</label>
         <select id = "state" name = "state">
             <option value = "AK">AK</option>
@@ -437,6 +432,7 @@
             <option value = "renewable">Renewable</option>
         </select>
         <button type = "button" onclick = "energyNavigate()">Go</button>
+        <button type = "button" onclick = "energyNavigate('next')">Next</button>
     </div>
 
     <h1 id = "energyType">{ENERGY_TYPE}</h1>
@@ -447,10 +443,6 @@
 
     </div>
 
-    <div id = "buttons">
-        <button type = "button" onclick = "energyNavigate('next')">Next</button>
-        <button type = "button" onclick = "energyNavigate('prev')">Previous</button>
-    </div>
     <div id = 'tableContainer'>
         <table>
             <thead>
