@@ -95,7 +95,9 @@ app.get('/state/:selected_state', (req, res) => {
                     stateName = x.state_name;
                 }
                 template = template.replace('{STATETABLE}',stateName);
-                template = template.replace('{STATETITLE}',stateName);            }
+                template = template.replace('{STATETITLE}',stateName);
+                template = template.replace("{ALT}",stateName);
+            }
         });
         db.all("select year, coal, natural_gas, nuclear, petroleum, renewable from Consumption where state_abbreviation is '?'".replace('?', req.params.selected_state),
         (err, rows) => {
@@ -195,7 +197,8 @@ app.get('/energy/:selected_energy_source', (req, res) => {
 
                 template = template.replace('{ENERGY_TYPE}',sourceCapitalized);
                 template = template.replace("{TABLE}",tableContents);
-                template = template.replace("{IMAGE}",req.params.selected_energy_source+'.jpg')
+                template = template.replace("{IMAGE}",req.params.selected_energy_source)
+                template = template.replace("{ALT}",req.params.selected_energy_source)
 
                 res.status(200).type('html').send(template);
             }
