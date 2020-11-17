@@ -262,8 +262,8 @@
             Plotly.newPlot('graphContainer', traces, layout);
         }
 
-        function stateNavigate(path) {
-            let value = document.getElementById(path).value;
+        function stateNavigate() {
+            let value = document.getElementById('state').value;
             let newPage = new URL(window.location.href);
             newPage.pathname = '/state/' + value;
             window.location.href = newPage.href
