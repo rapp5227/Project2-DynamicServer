@@ -84,6 +84,19 @@ app.get('/year/:selected_year', (req, res) => {
 app.get('/state/:selected_state', (req, res) => {
     console.log(req.params.selected_state);
     fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
+        db.all("select state_name from States where state_abbreviation is '?'".replace('?', req.params.selected_state), 
+        (err, rows) => {
+            if (err) {
+                res.status(404).type('text/plain').send('Error: no data found for error type ' + req.params.selected_state + '\n');
+            }
+            else {
+                var stateName;
+                for (x of rows) {
+                    stateName = x.state_name;
+                }
+                template = template.replace('{STATETABLE}',stateName);
+                template = template.replace('{STATETITLE}',stateName);            } 
+        });
         db.all("select year, coal, natural_gas, nuclear, petroleum, renewable from Consumption where state_abbreviation is '?'".replace('?', req.params.selected_state), 
         (err, rows) => {
             if (err) {
